@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1b2f8a" />
+  <title>Kumi University | Official Noticeboard</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="download.png" />
+  <link rel="apple-touch-icon" href="download.png" />
+  <style>
+    :root {
+      --primary: #1b2f8a;
+      --primary-dark: #111e5c;
+      --sky-blue: #b4e1f7;
+      --accent: #facc15;
+      --bg: #f4f7fb;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --urgent: #dc2626;
+      --border: #dbeafe;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 1.25rem 1rem;
+      border-bottom: 4px solid var(--accent);
+      box-shadow: 0 3px 12px rgba(17, 30, 92, 0.18);
+    }
+
+    .header-container {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-wrapper {
+      background: #ffffff;
+      padding: 6px 8px;
+      border-radius: 10px;
+      border: 2px solid var(--sky-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      flex-shrink: 0;
+    }
+
+    .logo-wrapper img {
+      height: 64px;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .brand-text h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      line-height: 1.2;
+    }
+
+    .brand-text .subtitle {
+      font-size: 0.9rem;
+      color: var(--sky-blue);
+      margin-top: 2px;
+    }
+
+    .brand-text .motto {
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-top: 3px;
+      text-transform: uppercase;
+    }
+
+    .btn {
+      padding: 0.55rem 1.1rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+
+    .btn-accent {
+      background-color: var(--accent);
+      color: #0f172a;
+    }
+
+    .btn-accent:hover {
+      background-color: #eab308;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-danger {
+      background-color: #fee2e2;
+      color: var(--urgent);
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-danger:hover {
+      background-color: var(--urgent);
+      color: white;
+    }
+
+    /* Main Container */
+    main {
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    /* Login Box & Admin Panel */
+    .panel-box {
+      display: none;
+      background: white;
+      border: 2px solid var(--primary);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .panel-box h2 {
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      color: var(--primary);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.65rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    /* Controls: Search & Filters */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+    }
+
+    .search-box:focus {
+      outline: 2px solid var(--primary);
+      border-color: transparent;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      padding: 0.45rem 0.95rem;
+      border-radius: 20px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .tab.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Announcement Cards */
+    .feed {
+      display: grid;
+      gap: 1.2rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.4rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+    }
+
+    .card.urgent {
+      border-left: 5px solid var(--urgent);
+      background-color: #fffafb;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: #e0f2fe;
+      color: var(--primary);
+    }
+
+    .badge.urgent-badge {
+      background: #fee2e2;
+      color: var(--urgent);
+      margin-left: 0.4rem;
+    }
+
+    .date {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      color: #0f172a;
+    }
+
+    .card p {
+      color: #334155;
+      font-size: 0.96rem;
+      white-space: pre-line;
+    }
+
+    .card-footer {
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+      background: white;
+      border-radius: 10px;
+      border: 1px dashed #cbd5e1;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 3rem;
+    }
+
+    @media (max-width: 600px) {
+      .logo-wrapper img {
+        height: 52px;
+      }
+      .brand-text h1 {
+        font-size: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <div class="brand">
+        <div class="logo-wrapper">
+          <img src="download.png" alt="Kumi University Crest" />
+        </div>
+        <div class="brand-text">
+          <h1>Kumi University Noticeboard</h1>
+          <p class="subtitle">Official Campus Announcements &amp; Student Updates</p>
+          <p class="motto">Godliness &amp; Excellence for Servanthood</p>
+        </div>
+      </div>
+      <button id="adminToggleBtn" class="btn btn-accent">Admin Login</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Admin Login Form -->
+    <section id="loginPanel" class="panel-box">
+      <h2>Staff / Admin Sign In</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="adminEmail">Admin Email</label>
+          <input type="email" id="adminEmail" placeholder="admin@kumiu.ac.ug" required />
+        </div>
+        <div class="form-group">
+          <label for="adminPassword">Password</label>
+          <input type="password" id="adminPassword" placeholder="Enter password" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Sign In</button>
+      </form>
+    </section>
+
+    <!-- Admin Post Form -->
+    <section id="adminPanel" class="panel-box">
+      <h2>Post a New Announcement</h2>
+      <form id="announcementForm">
+        <div class="form-group">
+          <label for="title">Announcement Title</label>
+          <input type="text" id="title" placeholder="e.g., End of Semester Examination Timetable" required />
+        </div>
+
+        <div class="form-group">
+          <label for="category">Category / Department</label>
+          <select id="category">
+            <option value="Academics">Academics</option>
+            <option value="Guild & Events">Guild &amp; Events</option>
+            <option value="Finance">Finance &amp; Fees</option>
+            <option value="Sports">Sports &amp; Clubs</option>
+            <option value="General">General Notice</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="author">Posted By</label>
+          <input type="text" id="author" placeholder="e.g., Office of the Academic Registrar" required />
+        </div>
+
+        <div class="form-group">
+          <label for="content">Announcement Details</label>
+          <textarea id="content" rows="4" placeholder="Write the full announcement here..." required></textarea>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="isUrgent" />
+          <label for="isUrgent">Mark as Urgent / Pin to Top</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="publishBtn">Publish Announcement</button>
+      </form>
+    </section>
+
+    <!-- Search & Category Filters -->
+    <section class="controls">
+      <input
+        type="text"
+        id="searchInput"
+        class="search-box"
+        placeholder="Search announcements by keyword or office..."
+      />
+      <div class="filter-tabs" id="filterTabs">
+        <button class="tab active" data-cat="All">All</button>
+        <button class="tab" data-cat="Academics">Academics</button>
+        <button class="tab" data-cat="Guild & Events">Guild &amp; Events</button>
+        <button class="tab" data-cat="Finance">Finance</button>
+        <button class="tab" data-cat="Sports">Sports</button>
+        <button class="tab" data-cat="General">General</button>
+      </div>
+    </section>
+
+    <!-- Announcements Feed -->
+    <section class="feed" id="announcementsFeed">
+      <div class="empty-state">Loading live announcements...</div>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2026 Kumi University Digital Noticeboard &bull; Kumi, Uganda<br />
+    <em>"Godliness &amp; Excellence for Servanthood"</em>
+  </footer>
+
+  <!-- Register PWA Service Worker -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js").catch((err) => {
+          console.log("Service worker registration skipped:", err);
+        });
+      });
+    }
+  </script>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      deleteDoc,
+      doc,
+      onSnapshot,
+      query,
+      orderBy,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAMC2VTcsqRIJiPNCbOpVDOR3jJXVmWB0A",
+      authDomain: "kumi-announcements.firebaseapp.com",
+      projectId: "kumi-announcements",
+      storageBucket: "kumi-announcements.firebasestorage.app",
+      messagingSenderId: "280366362374",
+      appId: "1:280366362374:web:9cb825e667460a082e3887"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    let currentUser = null;
+    let selectedCategory = "All";
+    let allAnnouncements = [];
+
+    const loginPanel = document.getElementById("loginPanel");
+    const adminPanel = document.getElementById("adminPanel");
+    const adminToggleBtn = document.getElementById("adminToggleBtn");
+
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      if (user) {
+        loginPanel.style.display = "none";
+        adminPanel.style.display = "block";
+        adminToggleBtn.textContent = "Sign Out";
+      } else {
+        adminPanel.style.display = "none";
+        adminToggleBtn.textContent = "Admin Login";
+      }
+      renderAnnouncements();
+    });
+
+    adminToggleBtn.addEventListener("click", async () => {
+      if (currentUser) {
+        await signOut(auth);
+      } else {
+        loginPanel.style.display = loginPanel.style.display === "block" ? "none" : "block";
+      }
+    });
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("adminEmail").value;
+      const password = document.getElementById("adminPassword").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        document.getElementById("loginForm").reset();
+      } catch (err) {
+        alert("Login failed: " + err.message);
+      }
+    });
+
+    const q = query(collection(db, "announcements"), orderBy("createdAt", "desc"));
+    onSnapshot(q, (snapshot) => {
+      allAnnouncements = snapshot.docs.map((docSnap) => ({
+        id: docSnap.id,
+        ...docSnap.data()
+      }));
+      renderAnnouncements();
+    }, (error) => {
+      console.error("Firestore error:", error);
+      document.getElementById("announcementsFeed").innerHTML =
+        `<div class="empty-state">Could not load announcements. Check your Firestore rules.</div>`;
+    });
+
+    document.getElementById("announcementForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById("publishBtn");
+      btn.disabled = true;
+      btn.textContent = "Publishing...";
+
+      const today = new Date().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+      });
+
+      try {
+        await addDoc(collection(db, "announcements"), {
+          title: document.getElementById("title").value.trim(),
+          category: document.getElementById("category").value,
+          author: document.getElementById("author").value.trim(),
+          content: document.getElementById("content").value.trim(),
+          urgent: document.getElementById("isUrgent").checked,
+          date: today,
+          createdAt: serverTimestamp()
+        });
+        document.getElementById("announcementForm").reset();
+      } catch (err) {
+        alert("Error publishing: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Publish Announcement";
+      }
+    });
+
+    window.deleteAnnouncement = async (id) => {
+      if (confirm("Are you sure you want to delete this announcement?")) {
+        try {
+          await deleteDoc(doc(db, "announcements", id));
+        } catch (err) {
+          alert("Error deleting: " + err.message);
+        }
+      }
+    };
+
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        selectedCategory = tab.dataset.cat;
+        document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+        renderAnnouncements();
+      });
+    });
+
+    document.getElementById("searchInput").addEventListener("input", renderAnnouncements);
+
+    function renderAnnouncements() {
+      const feed = document.getElementById("announcementsFeed");
+      const searchText = document.getElementById("searchInput").value.toLowerCase();
+
+      const sorted = [...allAnnouncements].sort((a, b) => Number(b.urgent) - Number(a.urgent));
+
+      const filtered = sorted.filter((post) => {
+        const matchesCat = selectedCategory === "All" || post.category === selectedCategory;
+        const matchesSearch =
+          (post.title || "").toLowerCase().includes(searchText) ||
+          (post.content || "").toLowerCase().includes(searchText) ||
+          (post.author || "").toLowerCase().includes(searchText);
+        return matchesCat && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        feed.innerHTML = `<div class="empty-state">No announcements found yet. Sign in as Admin to post the first one!</div>`;
+        return;
+      }
+
+      feed.innerHTML = filtered
+        .map(
+          (post) => `
+          <article class="card ${post.urgent ? "urgent" : ""}">
+            <div class="card-header">
+              <div>
+                <span class="badge">${post.category}</span>
+                ${post.urgent ? `<span class="badge urgent-badge">Urgent</span>` : ""}
+              </div>
+              <span class="date">${post.date || ""}</span>
+            </div>
+            <h3>${post.title}</h3>
+            <p>${post.content}</p>
+            <div class="card-footer">
+              <span>Posted by: <strong>${post.author}</strong></span>
+              ${
+                currentUser
+                  ? `<button class="btn btn-danger" onclick="deleteAnnouncement('${post.id}')">Delete</button>`
+                  : ""
+              }
+            </div>
+          </article>
+        `
+        )
+        .join("");
+    }
+  </script>
+</body>
+</html>
